@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
 
+using Il2CppSLZ.Marrow;
+
 using UnityEngine;
 
 namespace BulletTime.Patching;
@@ -23,5 +25,41 @@ public static class TimePatches
         {
             value = 1f / value;
         }
+    }
+}
+
+[HarmonyPatch(typeof(OpenControllerRig))]
+public static class OpenControllerRigPatches
+{
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(OpenControllerRig.TimeInput))]
+    public static bool TimeInputPrefix(OpenControllerRig __instance, bool down, bool up, bool touch)
+    {
+        if (!BulletTimeMod.IsEnabled)
+        {
+            return true;
+        }
+
+        if (!down)
+        {
+            return true;
+        }
+
+        if (TimeManager.CurrentTimeScaleStep >= 3)
+        {
+            TimeManager.DECREASE_TIMESCALE();
+
+            __instance._timeInput = false;
+            return false;
+        }
+
+        if (TimeManager.CurrentTimeScaleStep >= TimeManager.max_timeScaleStep)
+        {
+            __instance._timeInput = false;
+
+            return false;
+        }
+
+        return true;
     }
 }
