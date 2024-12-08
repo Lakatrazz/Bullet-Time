@@ -1,0 +1,9 @@
+{
+    "name": "Bullet_Time",
+    "version_number": "1.1.0",
+    "website_url": "https://github.com/Lakatrazz/Bullet-Time",
+    "description": "Increase your maximum level of slow motion.",
+    "dependencies": [
+         "gnonme-BoneLib-3.0.0"
+    ]
+}
